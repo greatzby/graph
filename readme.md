@@ -1,4 +1,4 @@
-# ALPLINE Template Code
+# Template Code
 This is the modified NanoGPT code for planning on graphs. To configure the environment, we use
 
     conda create --name gptenv --file spec-file.txt
