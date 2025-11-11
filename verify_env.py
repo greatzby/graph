@@ -78,7 +78,9 @@ def check_torch_cpu_ops():
 def check_torchvision_basic():
     dummy = torch.zeros(1, 3, 32, 32)
     model = torchvision.models.resnet18(weights=None)
-    out = model(dummy)
+    model.eval() 
+    with torch.no_grad():  
+        out = model(dummy)
     add_result("torchvision_basic", True, detail=f"output_shape={tuple(out.shape)}")
 
 
