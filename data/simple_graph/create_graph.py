@@ -4,6 +4,15 @@ import os
 import argparse
 import numpy
 
+SEED = 123456
+
+def set_seed(seed: int):
+    os.environ["PYTHONHASHSEED"] = str(seed)
+    random.seed(seed)
+    numpy.random.seed(seed)
+
+set_seed(SEED)
+
 def generate_random_directed_graph(num_nodes, edge_prob):
     # Create an empty directed graph
     G = nx.DiGraph()
