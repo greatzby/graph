@@ -47,7 +47,9 @@ parser.add_argument('--n_embd', type=int, default=120, help='Size of the embeddi
 parser.add_argument('--max_iters', type=int, default=10000, help='Number of Iterations (default: 10000)')
 parser.add_argument('--num_nodes', type=int, default=100, help='Number of Nodes (default: 100)')
 parser.add_argument('--num_of_paths', type=int, default=20, help='Number of Paths (default: 1)')
-
+parser.add_argument('--device', type=str, default='cpu', choices=['cpu', 'cuda'])
+parser.add_argument('--dtype', type=str, default='float32', choices=['float32', 'bfloat16', 'float16'])
+parser.add_argument('--compile', type=lambda x: x.lower() == 'true', default=False)
 
 args = parser.parse_args()
 
@@ -85,8 +87,8 @@ wandb_run_name = 'gpt2' # 'run' + str(time.time())
 # data
 #dataset = 'reasoning'
 gradient_accumulation_steps = 1 # used to simulate larger batch sizes
-train_batch_size = 1024 # if gradient_accumulation_steps > 1, this is the micro-batch size
-val_batch_size = 64
+train_batch_size = 32# if gradient_accumulation_steps > 1, this is the micro-batch size
+val_batch_size = 32
 batch_size = train_batch_size
 #block_size = 64
 # model
@@ -110,11 +112,10 @@ warmup_iters = max_iters//20 # how many steps to warm up for
 lr_decay_iters = max_iters # should be ~= max_iters per Chinchilla
 min_lr = learning_rate/10 # minimum learning rate, should be ~= learning_rate/10 per Chinchilla
 # DDP settings
-backend = 'nccl' # 'nccl', 'gloo', etc.
-# system
-device = 'cuda' # examples: 'cpu', 'cuda', 'cuda:0', 'cuda:1' etc., or try 'mps' on macbooks
-dtype = 'bfloat16' # 'float32', 'bfloat16', or 'float16', the latter will auto implement a GradScaler
-compile = True # use PyTorch 2.0 to compile the model to be faster
+device = args.device
+dtype = args.dtype
+compile = args.compile
+backend = 'gloo' if device == 'cpu' else 'nccl'
 
 '''check_type = 'shortest'
 max_path_len = 10
