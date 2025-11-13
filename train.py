@@ -34,6 +34,7 @@ import re
 from model import GPTConfig, GPT
 from logger import get_logger
 import logging
+import random
 
 SEED = 123456  # 与数据生成脚本保持一致
 
