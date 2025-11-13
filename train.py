@@ -35,6 +35,17 @@ from model import GPTConfig, GPT
 from logger import get_logger
 import logging
 
+SEED = 123456  # 与数据生成脚本保持一致
+
+def set_seed(seed: int):
+    os.environ["PYTHONHASHSEED"] = str(seed)
+    random.seed(seed)
+    np.random.seed(seed)
+    torch.manual_seed(seed)
+    torch.set_num_threads(1)
+
+set_seed(SEED)
+
 # -----------------------------------------------------------------------------
 # the input parameters
 
